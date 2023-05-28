@@ -19,8 +19,8 @@ public class StringEncoder {
         // Declarations
         String offsetCharacter = "B";
         String plainText = "HELLO WORLD";
-        String encodedString = null;
-        String decodedString = null;
+        // String encodedString = null;
+        // String decodedString = null;
 
 
         offsetValue = hm.get(offsetCharacter);
@@ -46,11 +46,12 @@ public class StringEncoder {
 
         for (int i=0; i<plainText.length(); i++){
             currentStr = String.valueOf(plainText.charAt(i));    
-            System.out.println(currentStr);
+            System.out.println("Current Character: " + currentStr);
             
-            // if (currentStr == " " || currentStr == null){
-            //     break;
-            // }
+            if (currentStr.contains(" ") || currentStr.isEmpty()){
+                // do nothing
+                continue;
+            }
             // get index + offset value
             newOffSetValue = hm.get(currentStr) - offsetValue;
             System.out.println(newOffSetValue);
