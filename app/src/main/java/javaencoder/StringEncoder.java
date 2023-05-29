@@ -8,111 +8,121 @@ import java.util.Map.Entry;
 
 public class StringEncoder {
     // Creating empty hash map
-    static DataStorage x = new DataStorage();
-    static DataStorage2 y = new DataStorage2();
+    static DataStorage ds = new DataStorage();
     static int offsetValue;
-    static String newText = "";
-    static HashMap<String,Integer> hm = x.getDataMap();
-    static HashMap<Integer,String> hm2 = y.getDataMap();
-    static HashMap<Integer,String> newHM = (HashMap<Integer,String>) hm2.clone();
-    // Data to CHANGE
-
+    static String encodedText = "";
+    static String decodedText = "";
+    static HashMap<Integer,String> hm = ds.getDataMap();
+    static HashMap<Integer,String> newHM = (HashMap<Integer,String>) hm.clone();
     
     public static void main(String[] args) {
         // Declarations
         int i = 0;
+        int hmSize;
         String firstString = null; 
+
+
+        // ------------- VARIABLES TO EDIT -------------
         String offsetCharacter = "B";
         String plainText = "HELLO WORLD";
-        // String encodedString = null;
-        // String decodedString = null;
+        // ------------- VARIABLES TO EDIT -------------
+
+
+        // To retrieve offset index
         getOffsetValue(offsetCharacter);
-        // encode(plainText);
         
-        // Create and clear the cloned map
+        // Clear the cloned hashmap
         newHM.clear();
-        // Get the offset value of the character (e.g. F = 5, let x = 5)
 
-        // Hashmap size - 44
-        int hmSize = hm2.entrySet().size();
-        System.out.println(hmSize);
+        // Hashmap size = 44
+        hmSize = hm.entrySet().size();
+        // System.out.println("Hashmap Size: " + hmSize);
 
-        // Go to original hash map table, proceed to index 43-x
+        // Insert the offset index and values into the cloned hashmap
         for (i=0; i < offsetValue; i++){
-            firstString = hm2.get(hmSize-offsetValue+i);
+            firstString = hm.get(hmSize-offsetValue+i);
             newHM.put(i, firstString);
         }
-        System.out.println("BEFORE: " + newHM);
-        // Loop from 43-x to x and put in the values into the new map
-        // Continue to put values into the new map from A 
-        y.insertHashMap(newHM, i);
-        System.out.println("AFTER: " + newHM);
+        // System.out.println("\nBEFORE: " + newHM);
+        
+        // Add in original hashmap (From "A" to "/")
+        ds.insertHashMap(newHM, i);
+        // System.out.println("\nAFTER: " + newHM);
 
-        // pop off extra elements
+        // Remove repeated index and values
         for (int j = 0; j < offsetValue; j++){
             newHM.remove(hmSize+j);
         }
-        System.out.println("AFTER POPPING: " + newHM);
+        // System.out.println("\nAFTER POPPING: " + newHM);
         
+        // 1 (True) - Encode
+        // 0 (False) - Decode
+
         // ENCODE
+        System.out.println("\n------- Encoded Text ------- ");
         encode(plainText);
-        System.out.println("Encoded Text: " + newText);
+        System.out.println(encodedText);
         
+        // DECODE
+        System.out.println("\n------- Decoded Text ------- ");
+        decode(encodedText);
+        System.out.println(decodedText);
 
     }
 
     public static void getOffsetValue(String value){
-        for(Entry<Integer, String> entry: hm2.entrySet()){
+        for(Entry<Integer, String> entry: hm.entrySet()){
             if (entry.getValue()==value){
                 offsetValue = entry.getKey();
-                System.out.println("OffsetValue: " + offsetValue);
+                // System.out.println("OffsetValue: " + offsetValue);
             }
         }
     }
 
-    public static String encode(String plainText){
-        // Offset value = 1
-        // With the offset value, get Key
-        // Integer newOffSetValue = null;
-        String currentChar = "";
-        
+    public static void encode(String plainText){
+        encodedText = encodeDecode(plainText, true);
+    }
 
-        for (int i=0; i<plainText.length(); i++){
-            currentChar = String.valueOf(plainText.charAt(i));    
+    public static void decode(String encodedText){
+        decodedText = encodeDecode(encodedText, false);
+    }
+
+    public static String encodeDecode(String text, boolean type){
+        // Variables
+        String currentChar = "";
+        String encodedDecodeString = "";
+
+        for (int i=0; i < text.length(); i++){
+            currentChar = String.valueOf(text.charAt(i));    
             // System.out.println("Current Character: " + currentChar);
             
             if (currentChar.contains(" ") || currentChar.isEmpty()){
-                // do nothing
-                newText += " ";
+                // Do nothing
+                encodedDecodeString += " ";
                 continue;
             }
 
-            for (Entry<Integer,String> entry: hm2.entrySet()){
-                if (entry.getValue().equals(currentChar)){
-                    // System.out.print(newHM.get(entry.getKey()));
-                    newText += newHM.get(entry.getKey());
+            if (type){
+                // Encode
+                for (Entry<Integer,String> entry: hm.entrySet()){
+                    if (entry.getValue().equals(currentChar)){
+                        // System.out.print(newHM.get(entry.getKey()));
+                        encodedDecodeString += newHM.get(entry.getKey());
+                    }
+                }
+
+            }
+            else if (type == false){
+                // Decode
+                for (Entry<Integer,String> entry: newHM.entrySet()){
+                    if (entry.getValue().equals(currentChar)){
+                        // System.out.print(newHM.get(entry.getKey()));
+                        encodedDecodeString += hm.get(entry.getKey());
+                    }
                 }
             }
-            // // get index + offset value
-            // newOffSetValue = hm.get(currentChar) - offsetValue;
-            // // System.out.println("Updated Offset Value: " + newOffSetValue);
-            // // get key value (encoded)
-            // for(Entry<String,Integer> entry: hm.entrySet()){
-            //     // System.out.println("Entry.getKey(): " + entry.getKey());
-            //     // System.out.println("Entry.getValue(): " + entry.getValue());
-            //     if(entry.getValue().equals(newOffSetValue)){
-            //         System.out.print(entry.getKey());
-            //         break;
-            //     } 
-            // }
         }
-
-        return newText;
-    }
-
-    public String decode(String encodedText){
-        
-        return encodedText;
+        return encodedDecodeString;
     }
 
     
