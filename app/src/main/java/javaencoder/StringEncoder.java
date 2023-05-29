@@ -23,7 +23,7 @@ public class StringEncoder {
 
 
         // ------------- VARIABLES TO EDIT -------------
-        String offsetCharacter = "F";
+        String offsetCharacter = "B";
         String plainText = "HELLO WORLD";
         System.out.println("Offset Character: " + offsetCharacter);
         System.out.println("Text: " + plainText);
