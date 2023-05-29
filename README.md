@@ -6,8 +6,8 @@ How to use:
 ![Edit Variables](/images/edit_variables.png)
 
 2. Results will be shown in console. <br>
-    Offset: B
+    Offset: B <br>
     ![Offset B](/images/offsetB.png)<br>
-    
-    Offset: F
+
+    Offset: F <br>
     ![Offset F](/images/offsetF.png)
